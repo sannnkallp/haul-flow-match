@@ -1,6 +1,5 @@
-
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -18,6 +17,7 @@ const Login = () => {
   const [driverEmail, setDriverEmail] = useState('');
   const [driverPassword, setDriverPassword] = useState('');
   const [rememberMe, setRememberMe] = useState(false);
+  const navigate = useNavigate();
 
   const handleUserLogin = (e: React.FormEvent) => {
     e.preventDefault();
@@ -31,7 +31,10 @@ const Login = () => {
     
     // Simulate login success
     toast.success('Login successful! Redirecting to dashboard...');
-    // In a real app, you would authenticate with your backend and redirect
+    // Redirect to dashboard after a short delay to allow the toast to be visible
+    setTimeout(() => {
+      navigate('/dashboard');
+    }, 1500);
   };
 
   const handleDriverLogin = (e: React.FormEvent) => {
@@ -46,7 +49,10 @@ const Login = () => {
     
     // Simulate login success
     toast.success('Driver login successful! Redirecting to driver dashboard...');
-    // In a real app, you would authenticate with your backend and redirect
+    // Redirect to dashboard after a short delay to allow the toast to be visible
+    setTimeout(() => {
+      navigate('/dashboard');
+    }, 1500);
   };
 
   return (
