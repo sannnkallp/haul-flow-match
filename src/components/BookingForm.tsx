@@ -7,6 +7,7 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { MapPin, Calendar, Truck, Info, Package } from 'lucide-react';
 import { toast } from 'sonner';
+import NearbyTrucksMap from './NearbyTrucksMap';
 
 const truckTypes = [
   { id: 'mini', name: 'Mini Truck', capacity: '1 ton', size: 'Small' },
@@ -26,6 +27,8 @@ const BookingForm = () => {
     cargoWeight: '',
     cargoDescription: '',
   });
+
+  const [formSubmitted, setFormSubmitted] = useState(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -47,147 +50,167 @@ const BookingForm = () => {
     }
     
     // Success message
-    toast.success('Your booking request has been submitted! We will find the best truck for you.');
+    toast.success('Your booking request has been submitted! Finding available trucks...');
     
-    // In a real app, you would send this data to your backend
+    // Show the map
+    setFormSubmitted(true);
+    
+    // Scroll to the map
+    setTimeout(() => {
+      const mapElement = document.getElementById('nearby-trucks-map');
+      if (mapElement) {
+        mapElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }, 300);
   };
 
   return (
-    <Card className="shadow-lg max-w-4xl mx-auto">
-      <CardHeader className="bg-logistics-blue text-white rounded-t-lg">
-        <CardTitle className="text-2xl">Book a Truck</CardTitle>
-      </CardHeader>
-      <CardContent className="pt-6">
-        <form onSubmit={handleSubmit}>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {/* Pickup Location */}
-            <div className="space-y-2">
-              <Label htmlFor="pickupLocation" className="flex items-center">
-                <MapPin className="h-4 w-4 mr-2 text-logistics-teal" />
-                Pickup Location*
+    <>
+      <Card className="shadow-lg max-w-4xl mx-auto mb-8">
+        <CardHeader className="bg-logistics-blue text-white rounded-t-lg">
+          <CardTitle className="text-2xl">Book a Truck</CardTitle>
+        </CardHeader>
+        <CardContent className="pt-6">
+          <form onSubmit={handleSubmit}>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {/* Pickup Location */}
+              <div className="space-y-2">
+                <Label htmlFor="pickupLocation" className="flex items-center">
+                  <MapPin className="h-4 w-4 mr-2 text-logistics-teal" />
+                  Pickup Location*
+                </Label>
+                <Input 
+                  id="pickupLocation" 
+                  name="pickupLocation" 
+                  placeholder="Enter pickup address" 
+                  value={formData.pickupLocation}
+                  onChange={handleChange}
+                  required
+                />
+              </div>
+              
+              {/* Delivery Location */}
+              <div className="space-y-2">
+                <Label htmlFor="deliveryLocation" className="flex items-center">
+                  <MapPin className="h-4 w-4 mr-2 text-logistics-teal" />
+                  Delivery Location*
+                </Label>
+                <Input 
+                  id="deliveryLocation" 
+                  name="deliveryLocation" 
+                  placeholder="Enter delivery address" 
+                  value={formData.deliveryLocation}
+                  onChange={handleChange}
+                  required
+                />
+              </div>
+              
+              {/* Pickup Date */}
+              <div className="space-y-2">
+                <Label htmlFor="pickupDate" className="flex items-center">
+                  <Calendar className="h-4 w-4 mr-2 text-logistics-teal" />
+                  Pickup Date & Time*
+                </Label>
+                <Input 
+                  id="pickupDate" 
+                  name="pickupDate" 
+                  type="datetime-local" 
+                  value={formData.pickupDate}
+                  onChange={handleChange}
+                  required
+                />
+              </div>
+              
+              {/* Expected Delivery Date */}
+              <div className="space-y-2">
+                <Label htmlFor="deliveryDate" className="flex items-center">
+                  <Calendar className="h-4 w-4 mr-2 text-logistics-teal" />
+                  Expected Delivery Date & Time
+                </Label>
+                <Input 
+                  id="deliveryDate" 
+                  name="deliveryDate" 
+                  type="datetime-local" 
+                  value={formData.deliveryDate}
+                  onChange={handleChange}
+                />
+              </div>
+              
+              {/* Truck Type */}
+              <div className="space-y-2">
+                <Label htmlFor="truckType" className="flex items-center">
+                  <Truck className="h-4 w-4 mr-2 text-logistics-teal" />
+                  Truck Type*
+                </Label>
+                <Select 
+                  value={formData.truckType} 
+                  onValueChange={(value) => handleSelectChange('truckType', value)}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select truck type" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectGroup>
+                      {truckTypes.map(truck => (
+                        <SelectItem key={truck.id} value={truck.id}>
+                          {truck.name} ({truck.capacity})
+                        </SelectItem>
+                      ))}
+                    </SelectGroup>
+                  </SelectContent>
+                </Select>
+              </div>
+              
+              {/* Cargo Weight */}
+              <div className="space-y-2">
+                <Label htmlFor="cargoWeight" className="flex items-center">
+                  <Package className="h-4 w-4 mr-2 text-logistics-teal" />
+                  Cargo Weight (tons)
+                </Label>
+                <Input 
+                  id="cargoWeight" 
+                  name="cargoWeight" 
+                  type="number" 
+                  placeholder="Enter cargo weight" 
+                  value={formData.cargoWeight}
+                  onChange={handleChange}
+                />
+              </div>
+            </div>
+            
+            {/* Cargo Description */}
+            <div className="mt-6 space-y-2">
+              <Label htmlFor="cargoDescription" className="flex items-center">
+                <Info className="h-4 w-4 mr-2 text-logistics-teal" />
+                Cargo Description
               </Label>
               <Input 
-                id="pickupLocation" 
-                name="pickupLocation" 
-                placeholder="Enter pickup address" 
-                value={formData.pickupLocation}
+                id="cargoDescription" 
+                name="cargoDescription" 
+                placeholder="Brief description of your cargo" 
+                value={formData.cargoDescription}
                 onChange={handleChange}
-                required
               />
             </div>
             
-            {/* Delivery Location */}
-            <div className="space-y-2">
-              <Label htmlFor="deliveryLocation" className="flex items-center">
-                <MapPin className="h-4 w-4 mr-2 text-logistics-teal" />
-                Delivery Location*
-              </Label>
-              <Input 
-                id="deliveryLocation" 
-                name="deliveryLocation" 
-                placeholder="Enter delivery address" 
-                value={formData.deliveryLocation}
-                onChange={handleChange}
-                required
-              />
+            <div className="mt-8 flex justify-end">
+              <Button type="submit" className="bg-logistics-teal hover:bg-logistics-blue">
+                Get Price Estimate
+              </Button>
             </div>
-            
-            {/* Pickup Date */}
-            <div className="space-y-2">
-              <Label htmlFor="pickupDate" className="flex items-center">
-                <Calendar className="h-4 w-4 mr-2 text-logistics-teal" />
-                Pickup Date & Time*
-              </Label>
-              <Input 
-                id="pickupDate" 
-                name="pickupDate" 
-                type="datetime-local" 
-                value={formData.pickupDate}
-                onChange={handleChange}
-                required
-              />
-            </div>
-            
-            {/* Expected Delivery Date */}
-            <div className="space-y-2">
-              <Label htmlFor="deliveryDate" className="flex items-center">
-                <Calendar className="h-4 w-4 mr-2 text-logistics-teal" />
-                Expected Delivery Date & Time
-              </Label>
-              <Input 
-                id="deliveryDate" 
-                name="deliveryDate" 
-                type="datetime-local" 
-                value={formData.deliveryDate}
-                onChange={handleChange}
-              />
-            </div>
-            
-            {/* Truck Type */}
-            <div className="space-y-2">
-              <Label htmlFor="truckType" className="flex items-center">
-                <Truck className="h-4 w-4 mr-2 text-logistics-teal" />
-                Truck Type*
-              </Label>
-              <Select 
-                value={formData.truckType} 
-                onValueChange={(value) => handleSelectChange('truckType', value)}
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="Select truck type" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectGroup>
-                    {truckTypes.map(truck => (
-                      <SelectItem key={truck.id} value={truck.id}>
-                        {truck.name} ({truck.capacity})
-                      </SelectItem>
-                    ))}
-                  </SelectGroup>
-                </SelectContent>
-              </Select>
-            </div>
-            
-            {/* Cargo Weight */}
-            <div className="space-y-2">
-              <Label htmlFor="cargoWeight" className="flex items-center">
-                <Package className="h-4 w-4 mr-2 text-logistics-teal" />
-                Cargo Weight (tons)
-              </Label>
-              <Input 
-                id="cargoWeight" 
-                name="cargoWeight" 
-                type="number" 
-                placeholder="Enter cargo weight" 
-                value={formData.cargoWeight}
-                onChange={handleChange}
-              />
-            </div>
-          </div>
-          
-          {/* Cargo Description */}
-          <div className="mt-6 space-y-2">
-            <Label htmlFor="cargoDescription" className="flex items-center">
-              <Info className="h-4 w-4 mr-2 text-logistics-teal" />
-              Cargo Description
-            </Label>
-            <Input 
-              id="cargoDescription" 
-              name="cargoDescription" 
-              placeholder="Brief description of your cargo" 
-              value={formData.cargoDescription}
-              onChange={handleChange}
-            />
-          </div>
-          
-          <div className="mt-8 flex justify-end">
-            <Button type="submit" className="bg-logistics-teal hover:bg-logistics-blue">
-              Get Price Estimate
-            </Button>
-          </div>
-        </form>
-      </CardContent>
-    </Card>
+          </form>
+        </CardContent>
+      </Card>
+      
+      {formSubmitted && (
+        <div id="nearby-trucks-map" className="max-w-4xl mx-auto">
+          <NearbyTrucksMap 
+            pickupLocation={formData.pickupLocation} 
+            deliveryLocation={formData.deliveryLocation} 
+          />
+        </div>
+      )}
+    </>
   );
 };
 
