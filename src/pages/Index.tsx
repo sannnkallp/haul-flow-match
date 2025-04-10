@@ -7,6 +7,7 @@ import BookingProcess from '@/components/BookingProcess';
 import Testimonials from '@/components/Testimonials';
 import CallToAction from '@/components/CallToAction';
 import Footer from '@/components/Footer';
+import TruckMatcher from '@/components/TruckMatcher';
 
 const Index = () => {
   return (
@@ -14,6 +15,7 @@ const Index = () => {
       <Navbar />
       <main className="flex-grow">
         <Hero />
+        <TruckMatcher />
         <Features />
         <BookingProcess />
         <Testimonials />
