@@ -1,7 +1,9 @@
+
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { ArrowRight, Truck, Award, BarChart, Navigation } from 'lucide-react';
+
 const Hero = () => {
   return <div className="relative overflow-hidden bg-white py-16 sm:py-24">
       {/* Background pattern */}
@@ -30,7 +32,7 @@ const Hero = () => {
                 </Link>
               </Button>
               <Button asChild variant="outline" size="lg">
-                <Link to="/driver" className="make this button work so the driver can register">
+                <Link to="/driver">
                   Register as Driver
                 </Link>
               </Button>
@@ -79,4 +81,5 @@ const Hero = () => {
       </div>
     </div>;
 };
+
 export default Hero;
