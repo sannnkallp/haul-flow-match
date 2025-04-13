@@ -28,9 +28,10 @@ const NearbyTrucksMap: React.FC<NearbyTrucksMapProps> = ({ pickupLocation, deliv
   // Set Mumbai as default center if no location provided
   const center = { lat: 19.0760, lng: 72.8777 };
   
+  // Fix: Use import.meta.env instead of process.env for Vite
   const { isLoaded } = useJsApiLoader({
     id: 'google-map-script',
-    googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY || "AIzaSyC2HQ0Vl4VNRIqSawdAIBEJKp0iFyCmYNg" // Replace with your actual API key
+    googleMapsApiKey: import.meta.env.VITE_GOOGLE_MAPS_API_KEY || "AIzaSyC2HQ0Vl4VNRIqSawdAIBEJKp0iFyCmYNg" // Replace with your actual API key
   });
   
   const [map, setMap] = useState<google.maps.Map | null>(null);

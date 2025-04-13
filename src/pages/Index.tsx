@@ -7,7 +7,7 @@ import BookingProcess from '@/components/BookingProcess';
 import Testimonials from '@/components/Testimonials';
 import CallToAction from '@/components/CallToAction';
 import Footer from '@/components/Footer';
-import TruckMatcher from '@/components/TruckMatcher';
+import TruckBookingInterface from '@/components/TruckBookingInterface';
 
 const Index = () => {
   return (
@@ -15,7 +15,11 @@ const Index = () => {
       <Navbar />
       <main className="flex-grow">
         <Hero />
-        <TruckMatcher />
+        <div className="py-12 bg-gray-50">
+          <div className="container mx-auto">
+            <TruckBookingInterface />
+          </div>
+        </div>
         <Features />
         <BookingProcess />
         <Testimonials />
